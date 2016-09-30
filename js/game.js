@@ -49,7 +49,22 @@
             this.ctx.clearRect(0, 0, 600, 600);
             this.bullets.drawBullets();
             this.ship.render();
+            this.isEndGame();
         }.bind(this), 60);
+    }
+
+    Game.prototype.stopPlaying = function() {
+        console.log("end Game");
+    }
+
+    Game.prototype.isEndGame = function() {
+        var shipPosition = this.ship.getShipPosition();
+        var bullets = this.bullets.getBullets();
+        _.forEach(bullets, function(bullet){
+            if(bullet.y > 550 && bullet.x > (shipPosition - 20) && bullet.x < (shipPosition + 40)){
+                this.stopPlaying();
+            }
+        }.bind(this))
     }
 
     var game = new Game();

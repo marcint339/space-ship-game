@@ -10,6 +10,10 @@
         this.height = 15;
     }
 
+    Bullets.prototype.getBullets = function() {
+        return this.bullets;
+    }
+
     Bullets.prototype.addNewBullets = function() {
         for (var i = 0; i < this.bulletsToCreate; i++) {
             this.bullets.push(

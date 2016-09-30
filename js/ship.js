@@ -21,6 +21,10 @@
         this.render();
     }
 
+    Ship.prototype.getShipPosition = function() {
+        return this.position;
+    }
+
     Ship.prototype.render = function(){
         this.ctx.fillStyle = "#FF0000";
         this.ctx.fillRect(this.position, 570, 20, 20);
