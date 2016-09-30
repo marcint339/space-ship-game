@@ -21,7 +21,7 @@
                 }
             )
         }
-        if(this.renderCounter == 5){
+        if(this.renderCounter == 4){
             this.bulletsToCreate++;
             this.renderCounter = 0;
         } else {
@@ -30,36 +30,42 @@
     }
 
     Bullets.prototype.drawBullets = function() {
-        this.ctx.clearRect(0, 0, 600, 600);
         _.each(this.bullets, function(bullet) {
-            this.ctx.save();
+            this.ctx.fillStyle = "#000";
             this.ctx.fillRect(bullet.x, bullet.y, bullet.width, bullet.height);
         }.bind(this));
     }
 
     Bullets.prototype.updatePositions = function() {
+        this.removeInvisibleBullets();
         _.each(this.bullets, function(bullet) {
             bullet.y += 20;
         });
     }
 
-    Bullets.prototype.render = function() {
-        var counter = 0;
-        this.addNewBullets();
-        setInterval(function() {
-            this.updatePositions();
-            if(counter == 40){
-                this.addNewBullets();
-                counter = 0;
-            } else {
-                counter++;
-            }
-            this.drawBullets();
-        }.bind(this), 60);
+    Bullets.prototype.removeInvisibleBullets = function() {
+        _.remove(this.bullets, function(bullet){
+            return bullet.y > 600;
+        });
     }
 
+    // Bullets.prototype.render = function() {
+    //     var counter = 0;
+    //     this.addNewBullets();
+    //     setInterval(function() {
+    //         this.updatePositions();
+    //         if(counter == 40){
+    //             this.addNewBullets();
+    //             counter = 0;
+    //         } else {
+    //             counter++;
+    //         }
+    //         this.drawBullets();
+    //     }.bind(this), 60);
+    // }
+
     // Export to window
-	window.app = window.app || {};
-	window.app.Bullets = Bullets;
+    window.app = window.app || {};
+    window.app.Bullets = Bullets;
 
 }(window));

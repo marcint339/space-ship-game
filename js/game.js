@@ -8,6 +8,23 @@
         this.bullets = new app.Bullets(this.ctx);
         this.ship = new app.Ship(this.ctx);
         this.startGame();
+        this.initListeners();
+    }
+
+    Game.prototype.initListeners = function() {
+        window.addEventListener('keydown', function(event){
+            switch (event.keyCode) {
+                case 37:
+                    this.ship.moveToLeft();
+                    break;
+                case 39:
+                    this.ship.moveToRight();
+                    break;
+                case 32:
+                    //space
+                    break;
+            }
+        }.bind(this));
     }
 
     Game.prototype.initCanvasPlayground = function() {
@@ -19,7 +36,20 @@
     }
 
     Game.prototype.startGame = function() {
-        this.bullets.render();
+        var counter = 0;
+        this.bullets.addNewBullets();
+        setInterval(function() {
+            this.bullets.updatePositions();
+            if(counter == 40){
+                this.bullets.addNewBullets();
+                counter = 0;
+            } else {
+                counter++;
+            }
+            this.ctx.clearRect(0, 0, 600, 600);
+            this.bullets.drawBullets();
+            this.ship.render();
+        }.bind(this), 60);
     }
 
     var game = new Game();
