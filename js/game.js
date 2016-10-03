@@ -9,10 +9,17 @@
         this.ship = new app.Ship(this.ctx);
         this.bullets = new app.Bullets(this.ctx);
         this.endOfGame = false;
-        this.startGame();
+        //this.startGame();
         this.initListeners();
         this.scoreCounter = 0;
         this.backgroundPosition = 0;
+
+        var startGameButton = document.getElementById('startGame');
+        startGameButton.addEventListener('click', function(e){
+            e.preventDefault();
+            startGameButton.style.display = 'none';
+            this.startGame();
+        }.bind(this));
     }
 
     Game.prototype.initListeners = function() {

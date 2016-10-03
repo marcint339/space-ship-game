@@ -29,7 +29,19 @@ canvas{
     margin: 0;
     color: #fff;
     float: right;
+    font-size: initial;
 }
 .score h3 span {
     font-size: 22px;
+}
+
+#startGame{
+    width: 145px;
+height: 55px;
+position: absolute;
+top: 0;
+bottom: 0;
+left: 0;
+right: 0;
+margin: auto;
 }
