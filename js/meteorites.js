@@ -53,7 +53,7 @@
     Meteorites.prototype.updatePositions = function() {
         this.removeInvisibleMeteorites();
         _.each(this.meteorites, function(meteorite) {
-            meteorite.y += 20;
+            meteorite.y += 4;
         });
     }
 

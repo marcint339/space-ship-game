@@ -33,7 +33,7 @@
 
     Game.prototype.shoot = function() {
         var position = this.ship.getShipPosition();
-        this.bullets.addNewBullet(position + 18);
+        this.bullets.shoot(position + 18);
         this.bullets.drawBullets();
     }
 
@@ -47,11 +47,10 @@
 
     Game.prototype.startGame = function() {
         var counter = 0;
-        this.meteorites.addNewMeteorites();
         var timer = setInterval(function() {
             this.meteorites.updatePositions();
             this.bullets.updatePositions();
-            if(counter == 40){
+            if(counter == 100){
                 this.meteorites.addNewMeteorites();
                 counter = 0;
             } else {
@@ -64,7 +63,7 @@
             this.isEndGame();
             this.checkShoots();
             if(this.endOfGame) clearInterval(timer);
-        }.bind(this), 60);
+        }.bind(this), 15);
         this.calculateScore();
     }
 
@@ -77,7 +76,7 @@
             });
             if(meteorite){
                 this.scoreCounter += 5;
-                this.bullets.removeBullet(bullet);
+                this.bullets.removeSingleBullet(bullet);
                 this.meteorites.removeMeteorite(meteorite);
                 this.meteorites.drawMeteorites();
                 this.bullets.drawBullets();
