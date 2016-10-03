@@ -1,0 +1,35 @@
+canvas{
+    margin: auto;
+    display: block;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    border: 1px solid #000;
+    background-image: url('img/bg.jpg');
+    background-size: 600px auto;
+    background-repeat: repeat-y;
+}
+.canvas-overlay{
+    margin: auto;
+    display: block;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 600px;
+    height: 600px;
+    z-index: 1;
+    padding: 10px;
+    box-sizing: border-box;
+}
+.score h3 {
+    margin: 0;
+    color: #fff;
+    float: right;
+}
+.score h3 span {
+    font-size: 22px;
+}
