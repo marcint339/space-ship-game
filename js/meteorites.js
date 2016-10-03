@@ -1,9 +1,6 @@
 (function(window) {
     'use strict';
 
-    var asteroidImage = new Image();
-    asteroidImage.src = 'img/asteroid.png';
-
     function Meteorites(ctx) {
         this.ctx = ctx;
         this.meteorites = [];
@@ -11,12 +8,24 @@
         this.renderCounter = 0;
         this.width = 30;
         this.height = 30;
+
+        this.meteoritImage = new Image();
+        this.meteoritImage.src = 'img/asteroid.png';
     }
 
-    Meteorites.prototype.removeMeteorite = function(meteorite) {
+    Meteorites.prototype.removeMeteorit = function(meteorit) {
         _.remove(this.meteorites, function(obj){
-            return obj.x == meteorite.x && obj.y == meteorite.y;
+            return obj.x == meteorit.x && obj.y == meteorit.y;
         })
+    }
+
+    Meteorites.prototype.hitMeteorit = function(meteorit) {
+        var index = _.findIndex(this.meteorites, function(obj){
+            return obj.x == meteorit.x && obj.y == meteorit.y;
+        });
+        if(index > -1){
+            this.meteorites[index].hits++;
+        }
     }
 
     Meteorites.prototype.getMeteorites = function() {
@@ -29,8 +38,9 @@
                 {
                     x: Math.floor(Math.random() * 580),
                     y: Math.floor(Math.random() * -500),
-                    width: this.width,
-                    height: this.height
+                    size: Math.floor(Math.random() * 4) + 1,
+                    speed: Math.floor(Math.random() * 3) + 1,
+                    hits: 0
                 }
             )
         }
@@ -43,9 +53,9 @@
     }
 
     Meteorites.prototype.drawMeteorites = function() {
-        _.each(this.meteorites, function(meteorite) {
+        _.each(this.meteorites, function(meteorit) {
             this.ctx.fillStyle = "#000";
-            this.ctx.drawImage(asteroidImage, meteorite.x, meteorite.y, meteorite.width, meteorite.height);
+            this.ctx.drawImage(this.meteoritImage, meteorit.x, meteorit.y, 5 + meteorit.size * 12, 5 + meteorit.size * 12);
             //this.ctx.fillRect(meteorite.x, meteorite.y, meteorite.width, meteorite.height);
         }.bind(this));
     }
@@ -53,13 +63,13 @@
     Meteorites.prototype.updatePositions = function() {
         this.removeInvisibleMeteorites();
         _.each(this.meteorites, function(meteorite) {
-            meteorite.y += 4;
+            meteorite.y += meteorite.speed * 2;
         });
     }
 
     Meteorites.prototype.removeInvisibleMeteorites = function() {
-        _.remove(this.meteorites, function(meteorite){
-            return meteorite.y > 600;
+        _.remove(this.meteorites, function(meteorit){
+            return meteorit.y > 600;
         });
     }
 

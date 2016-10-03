@@ -71,13 +71,18 @@
         var meteorites = this.meteorites.getMeteorites();
         var bullets = this.bullets.getBullets();
         _.forEach(bullets, function(bullet){
-            var meteorite = _.find(meteorites, function(meteorite){
-                return bullet.x > meteorite.x && bullet.x < (meteorite.x + meteorite.width) && bullet.y > meteorite.y && bullet.y < (meteorite.y + 30);
+            var meteorit = _.find(meteorites, function(meteorit){
+                return bullet.x > meteorit.x && bullet.x < (meteorit.x + (5 + meteorit.size * 12)) && bullet.y > meteorit.y && bullet.y < (meteorit.y + 30);
             });
-            if(meteorite){
-                this.scoreCounter += 5;
+            if(meteorit){
+                this.scoreCounter += (3 * meteorit.size);
                 this.bullets.removeSingleBullet(bullet);
-                this.meteorites.removeMeteorite(meteorite);
+                if((meteorit.hits + 2) >= meteorit.size){
+                    this.meteorites.removeMeteorit(meteorit);
+                } else {
+                    this.meteorites.hitMeteorit(meteorit);
+                }
+
                 this.meteorites.drawMeteorites();
                 this.bullets.drawBullets();
                 return false; // exit forEach

@@ -11,14 +11,14 @@
     }
 
     Ship.prototype.moveToLeft = function() {
-        if(this.position > 25){
+        if(this.position > 0){
             this.position -= 25;
         }
         this.render();
     }
 
     Ship.prototype.moveToRight = function() {
-        if(this.position < 555){
+        if(this.position < 575){
             this.position += 25;
         }
         this.render();
