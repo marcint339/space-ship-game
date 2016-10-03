@@ -12,6 +12,7 @@
         this.startGame();
         this.initListeners();
         this.scoreCounter = 0;
+        this.backgroundPosition = 0;
     }
 
     Game.prototype.initListeners = function() {
@@ -48,6 +49,8 @@
     Game.prototype.startGame = function() {
         var counter = 0;
         var timer = setInterval(function() {
+            this.backgroundPosition++;
+            document.getElementById('playground').style.backgroundPosition = "center " + (this.backgroundPosition * 0.4) + "px";
             this.meteorites.updatePositions();
             this.bullets.updatePositions();
             if(counter == 100){
@@ -75,10 +78,10 @@
                 return bullet.x > meteorit.x && bullet.x < (meteorit.x + (5 + meteorit.size * 12)) && bullet.y > meteorit.y && bullet.y < (meteorit.y + 30);
             });
             if(meteorit){
-                this.scoreCounter += (3 * meteorit.size);
                 this.bullets.removeSingleBullet(bullet);
                 if((meteorit.hits + 2) >= meteorit.size){
                     this.meteorites.removeMeteorit(meteorit);
+                    this.scoreCounter += (3 * meteorit.size);
                 } else {
                     this.meteorites.hitMeteorit(meteorit);
                 }

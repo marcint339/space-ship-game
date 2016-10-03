@@ -12,14 +12,14 @@
 
     Ship.prototype.moveToLeft = function() {
         if(this.position > 0){
-            this.position -= 25;
+            this.position -= 15;
         }
         this.render();
     }
 
     Ship.prototype.moveToRight = function() {
         if(this.position < 575){
-            this.position += 25;
+            this.position += 15;
         }
         this.render();
     }
@@ -30,7 +30,7 @@
 
     Ship.prototype.render = function(){
         this.ctx.fillStyle = "#FF0000";
-        this.ctx.drawImage(shipImage, this.position, 540, 40, 40);
+        this.ctx.drawImage(shipImage, this.position, 540, 45, 45);
         //this.ctx.fillRect(this.position, 570, 20, 20);
     }
 
