@@ -1,6 +1,9 @@
 (function(window) {
     'use strict';
 
+    var shipImage = new Image();
+    shipImage.src = 'img/rocket.png';
+
     function Ship(ctx) {
         this.ctx = ctx;
         this.position = 280;
@@ -27,7 +30,8 @@
 
     Ship.prototype.render = function(){
         this.ctx.fillStyle = "#FF0000";
-        this.ctx.fillRect(this.position, 570, 20, 20);
+        this.ctx.drawImage(shipImage, this.position, 540, 40, 40);
+        //this.ctx.fillRect(this.position, 570, 20, 20);
     }
 
     // Export to window

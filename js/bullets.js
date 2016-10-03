@@ -4,38 +4,34 @@
     function Bullets(ctx) {
         this.ctx = ctx;
         this.bullets = [];
-        this.bulletsToCreate = 1;
-        this.renderCounter = 0;
-        this.width = 15;
-        this.height = 15;
+        this.width = 3;
+        this.height = 12;
+    }
+
+    Bullets.prototype.removeBullet = function(bullet) {
+        _.remove(this.bullets, function(obj){
+            return obj.x == bullet.x && obj.y == bullet.y;
+        })
     }
 
     Bullets.prototype.getBullets = function() {
         return this.bullets;
     }
 
-    Bullets.prototype.addNewBullets = function() {
-        for (var i = 0; i < this.bulletsToCreate; i++) {
-            this.bullets.push(
-                {
-                    x: Math.floor(Math.random() * 580),
-                    y: Math.floor(Math.random() * -500),
-                    width: this.width,
-                    height: this.height
-                }
-            )
-        }
-        if(this.renderCounter == 4){
-            this.bulletsToCreate++;
-            this.renderCounter = 0;
-        } else {
-            this.renderCounter++;
-        }
+    Bullets.prototype.addNewBullet = function(x) {
+        this.bullets.push(
+            {
+                x: x,
+                y: 520,
+                width: this.width,
+                height: this.height
+            }
+        )
     }
 
     Bullets.prototype.drawBullets = function() {
         _.each(this.bullets, function(bullet) {
-            this.ctx.fillStyle = "#000";
+            this.ctx.fillStyle = "#FFA500";
             this.ctx.fillRect(bullet.x, bullet.y, bullet.width, bullet.height);
         }.bind(this));
     }
@@ -43,30 +39,15 @@
     Bullets.prototype.updatePositions = function() {
         this.removeInvisibleBullets();
         _.each(this.bullets, function(bullet) {
-            bullet.y += 20;
+            bullet.y -= 10;
         });
     }
 
     Bullets.prototype.removeInvisibleBullets = function() {
         _.remove(this.bullets, function(bullet){
-            return bullet.y > 600;
+            return bullet.y < 0;
         });
     }
-
-    // Bullets.prototype.render = function() {
-    //     var counter = 0;
-    //     this.addNewBullets();
-    //     setInterval(function() {
-    //         this.updatePositions();
-    //         if(counter == 40){
-    //             this.addNewBullets();
-    //             counter = 0;
-    //         } else {
-    //             counter++;
-    //         }
-    //         this.drawBullets();
-    //     }.bind(this), 60);
-    // }
 
     // Export to window
     window.app = window.app || {};
