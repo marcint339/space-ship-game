@@ -13,6 +13,12 @@
         this.meteoritImage.src = 'img/asteroid.png';
     }
 
+    Meteorites.prototype.clear = function() {
+        this.meteorites = [];
+        this.meteoritesToCreate = 1;
+        this.renderCounter = 0;
+    }
+
     Meteorites.prototype.removeMeteorit = function(meteorit) {
         _.remove(this.meteorites, function(obj){
             return obj.x == meteorit.x && obj.y == meteorit.y;

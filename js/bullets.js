@@ -8,6 +8,10 @@
         this.height = 12;
     }
 
+    Bullets.prototype.clear = function() {
+        this.bullets = [];
+    }
+
     Bullets.prototype.getBullets = function() {
         return this.bullets;
     }

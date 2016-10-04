@@ -10,6 +10,10 @@
         //this.render();
     }
 
+    Ship.prototype.clear = function() {
+        this.position = 280;
+    }
+
     Ship.prototype.moveToLeft = function() {
         if(this.position > 0){
             this.position -= 15;

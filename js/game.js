@@ -9,7 +9,6 @@
         this.ship = new app.Ship(this.ctx);
         this.bullets = new app.Bullets(this.ctx);
         this.endOfGame = false;
-        //this.startGame();
         this.initListeners();
         this.scoreCounter = 0;
         this.backgroundPosition = 0;
@@ -54,6 +53,17 @@
     }
 
     Game.prototype.startGame = function() {
+        if(this.scoreCounter > 0){
+            this.scoreCounter = 0;
+            var scoreCounterWrapper = document.getElementById('scoreCounter');
+            scoreCounterWrapper.innerHTML = this.scoreCounter;
+            var gameOver = document.getElementById('gameOver');
+            gameOver.style.display = 'none';
+            this.endOfGame = false;
+            this.meteorites.clear();
+            this.bullets.clear();
+            this.ship.clear();
+        }
         var counter = 0;
         var timer = setInterval(function() {
             this.backgroundPosition++;
@@ -104,13 +114,22 @@
         var scoreCounterWrapper = document.getElementById('scoreCounter');
         var timer = setInterval(function() {
             if(this.endOfGame) clearInterval(timer);
-            this.scoreCounter++;
-            scoreCounterWrapper.innerHTML = this.scoreCounter;
+            else{
+                this.scoreCounter++;
+                scoreCounterWrapper.innerHTML = this.scoreCounter;
+            }
         }.bind(this), 1000);
     }
 
     Game.prototype.stopPlaying = function() {
         this.endOfGame = true;
+        this.ctx.clearRect(0, 0, 600, 600);
+        var startGameButton = document.getElementById('startGame');
+        startGameButton.style.display = 'inline-block';
+        var gameOver = document.getElementById('gameOver');
+        gameOver.style.display = 'block';
+        var scoreCounterWrapper = document.getElementById('scoreGameOver');
+        scoreCounterWrapper.innerHTML = this.scoreCounter;
     }
 
     Game.prototype.isEndGame = function() {
