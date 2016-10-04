@@ -87,16 +87,20 @@
 
             this.meteorites.updatePositions();
             this.bullets.updatePositions();
-            if(counter == 100){
+            if(counter === 100){
                 this.meteorites.addNewMeteorites();
                 counter = 0;
             } else {
                 counter++;
             }
             this.renderGameElements();
-            this.isEndGame();
-            this.checkShoots();
-            if(this.endOfGame) clearInterval(gameTimer);
+            this.checkIfGameOver();
+
+            if(!this.endOfGame){
+                this.checkShoots();
+            } else{
+                clearInterval(gameTimer);
+            }
         }.bind(this), 15);
         this.calculateScore();
     }
@@ -123,9 +127,7 @@
         var meteorites = this.meteorites.getMeteorites();
         var bullets = this.bullets.getBullets();
         _.forEach(bullets, function(bullet){
-            var meteorit = _.find(meteorites, function(meteorit){
-                return bullet.x > meteorit.x && bullet.x < (meteorit.x + (5 + meteorit.size * 12)) && bullet.y > meteorit.y && bullet.y < (meteorit.y + 30);
-            });
+            var meteorit = this.getHitMeteorit(meteorites, bullet);
             if(meteorit){
                 this.bullets.removeSingleBullet(bullet);
                 if((meteorit.hits + 2) >= meteorit.size){
@@ -142,7 +144,16 @@
         }.bind(this))
     }
 
-    Game.prototype.isEndGame = function() {
+    Game.prototype.getHitMeteorit = function(meteorites, bullet) {
+        return _.find(meteorites, function(meteorit){
+            return bullet.x > meteorit.x &&
+                   bullet.x < (meteorit.x + (5 + meteorit.size * 12)) &&
+                   bullet.y > meteorit.y &&
+                   bullet.y < (meteorit.y + 30);
+        });
+    }
+
+    Game.prototype.checkIfGameOver = function() {
         var shipPosition = this.ship.getShipPosition();
         var meteorites = this.meteorites.getMeteorites();
         _.forEach(meteorites, function(meteorit){
