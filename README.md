@@ -1,5 +1,5 @@
 # space-ship-game
-Simple game written in Vanilla JavaScript (ES5).
+Simple game written in Vanilla JavaScript (ES5) + lodash.
 
 Made just for fun. [Play it here!](https://marcint339.github.io/space-ship-game/)
 
