@@ -5,69 +5,86 @@
 
     function Game() {
         this.ctx = this.initCanvasPlayground();
+
         this.meteorites = new app.Meteorites(this.ctx);
         this.ship = new app.Ship(this.ctx);
         this.bullets = new app.Bullets(this.ctx);
+
         this.endOfGame = false;
-        this.initListeners();
         this.scoreCounter = 0;
         this.backgroundPosition = 0;
 
-        var startGameButton = document.getElementById('startGame');
-        startGameButton.addEventListener('click', function(e){
-            e.preventDefault();
-            startGameButton.style.display = 'none';
-            this.startGame();
-        }.bind(this));
-    }
+        this.DOMElements = {
+            playground: document.getElementById('playground'),
+            startGameButton: document.getElementById('startGame'),
+            scoreCounterWrapper: document.getElementById('scoreCounter'),
+            scoreGameOver: document.getElementById('scoreGameOver'),
+            gameOverInfo: document.getElementById('gameOver')
+        }
 
-    Game.prototype.initListeners = function() {
-        window.addEventListener('keydown', function(event){
-            if(this.endOfGame) return false;
-            switch (event.keyCode) {
-                case 37:
-                    this.ship.moveToLeft();
-                    break;
-                case 39:
-                    this.ship.moveToRight();
-                    break;
-                case 38:
-                    this.shoot();
-                    break;
-            }
-        }.bind(this));
-    }
-
-    Game.prototype.shoot = function() {
-        var position = this.ship.getShipPosition();
-        this.bullets.shoot(position + 18);
-        this.bullets.drawBullets();
+        this.initListeners();
     }
 
     Game.prototype.initCanvasPlayground = function() {
         var canvas = document.getElementById('playground');
         var ctx = canvas.getContext('2d');
-        canvas.width = 600;
-        canvas.height = 600;
         return ctx;
     }
 
-    Game.prototype.startGame = function() {
-        if(this.scoreCounter > 0){
-            this.scoreCounter = 0;
-            var scoreCounterWrapper = document.getElementById('scoreCounter');
-            scoreCounterWrapper.innerHTML = this.scoreCounter;
-            var gameOver = document.getElementById('gameOver');
-            gameOver.style.display = 'none';
-            this.endOfGame = false;
-            this.meteorites.clear();
-            this.bullets.clear();
-            this.ship.clear();
+    Game.prototype.initListeners = function() {
+        this.DOMElements.startGameButton.addEventListener('click', function(e){
+            this.handleStartGame(e);
+        }.bind(this));
+
+        window.addEventListener('keydown', function(e){
+            this.handleKeyDown(e);
+        }.bind(this));
+    }
+
+    Game.prototype.handleStartGame = function(e) {
+        e.preventDefault();
+        this.DOMElements.startGameButton.style.display = 'none';
+        this.startGame();
+    }
+
+    Game.prototype.handleKeyDown = function(e) {
+        if(this.endOfGame) return false;
+        switch (e.keyCode) {
+            case 37:
+                this.ship.moveToLeft();
+                break;
+            case 39:
+                this.ship.moveToRight();
+                break;
+            case 38:
+                this.shoot();
+                break;
         }
+    }
+
+    Game.prototype.shoot = function() {
+        var position = this.ship.getShipPosition();
+        this.bullets.shoot(position + 18); // 18 -> shot from the middle of ship
+    }
+
+    Game.prototype.handleResetPreviousGame = function() {
+        this.scoreCounter = 0;
+        this.DOMElements.scoreCounterWrapper.innerHTML = this.scoreCounter;
+        this.DOMElements.gameOverInfo.style.display = 'none';
+        this.endOfGame = false;
+
+        this.meteorites.clear();
+        this.bullets.clear();
+        this.ship.clear();
+    }
+
+    Game.prototype.startGame = function() {
+        if(this.scoreCounter > 0) this.handleResetPreviousGame();
         var counter = 0;
-        var timer = setInterval(function() {
-            this.backgroundPosition++;
-            document.getElementById('playground').style.backgroundPosition = "center " + (this.backgroundPosition * 0.4) + "px";
+        var gameTimer = setInterval(function() {
+            this.backgroundPosition += 0.4;
+            this.DOMElements.playground.style.backgroundPosition = "center " + this.backgroundPosition + "px";
+
             this.meteorites.updatePositions();
             this.bullets.updatePositions();
             if(counter == 100){
@@ -76,15 +93,30 @@
             } else {
                 counter++;
             }
-            this.ctx.clearRect(0, 0, 600, 600);
-            this.meteorites.drawMeteorites();
-            this.bullets.drawBullets();
-            this.ship.render();
+            this.renderGameElements();
             this.isEndGame();
             this.checkShoots();
-            if(this.endOfGame) clearInterval(timer);
+            if(this.endOfGame) clearInterval(gameTimer);
         }.bind(this), 15);
         this.calculateScore();
+    }
+
+    Game.prototype.calculateScore = function() {
+        var gameTimer = setInterval(function() {
+            if(this.endOfGame){
+                clearInterval(gameTimer);
+            } else {
+                this.scoreCounter++;
+                this.DOMElements.scoreCounterWrapper.innerHTML = this.scoreCounter;
+            }
+        }.bind(this), 1000);
+    }
+
+    Game.prototype.renderGameElements = function() {
+        this.ctx.clearRect(0, 0, 600, 600);
+        this.meteorites.drawMeteorites();
+        this.bullets.drawBullets();
+        this.ship.render();
     }
 
     Game.prototype.checkShoots = function() {
@@ -110,36 +142,32 @@
         }.bind(this))
     }
 
-    Game.prototype.calculateScore = function() {
-        var scoreCounterWrapper = document.getElementById('scoreCounter');
-        var timer = setInterval(function() {
-            if(this.endOfGame) clearInterval(timer);
-            else{
-                this.scoreCounter++;
-                scoreCounterWrapper.innerHTML = this.scoreCounter;
+    Game.prototype.isEndGame = function() {
+        var shipPosition = this.ship.getShipPosition();
+        var meteorites = this.meteorites.getMeteorites();
+        _.forEach(meteorites, function(meteorit){
+            if(this.isMeteoritAndShipCollision(meteorit, shipPosition)){
+                this.stopPlaying();
+                return false; // exit forEach
             }
-        }.bind(this), 1000);
+        }.bind(this))
+    }
+
+    Game.prototype.isMeteoritAndShipCollision = function(meteorit, shipPosition) {
+        var meteoritSize = 5 + meteorit.size * 12;
+        return meteorit.y > 540 && meteorit.y < 585 && meteorit.x > (shipPosition - meteoritSize + 1) && meteorit.x < (shipPosition + 44);
     }
 
     Game.prototype.stopPlaying = function() {
         this.endOfGame = true;
         this.ctx.clearRect(0, 0, 600, 600);
-        var startGameButton = document.getElementById('startGame');
-        startGameButton.style.display = 'inline-block';
-        var gameOver = document.getElementById('gameOver');
-        gameOver.style.display = 'block';
-        var scoreCounterWrapper = document.getElementById('scoreGameOver');
-        scoreCounterWrapper.innerHTML = this.scoreCounter;
+        this.displayResult();
     }
 
-    Game.prototype.isEndGame = function() {
-        var shipPosition = this.ship.getShipPosition();
-        var meteorites = this.meteorites.getMeteorites();
-        _.forEach(meteorites, function(meteorit){
-            if(meteorit.y > 550 && meteorit.x > (shipPosition - 20) && meteorit.x < (shipPosition + 40)){
-                this.stopPlaying();
-            }
-        }.bind(this))
+    Game.prototype.displayResult = function() {
+        this.DOMElements.startGameButton.style.display = 'inline-block';
+        this.DOMElements.gameOverInfo.style.display = 'block';
+        this.DOMElements.scoreGameOver.innerHTML = this.scoreCounter;
     }
 
     var game = new Game();

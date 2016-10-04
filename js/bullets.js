@@ -4,8 +4,6 @@
     function Bullets(ctx) {
         this.ctx = ctx;
         this.bullets = [];
-        this.width = 3;
-        this.height = 12;
     }
 
     Bullets.prototype.clear = function() {
@@ -26,15 +24,14 @@
         this.bullets.push({
             x: position,
             y: 520,
-            width: this.width,
-            height: this.height
-        })
+        });
+        this.drawBullets();
     }
 
     Bullets.prototype.drawBullets = function() {
         _.each(this.bullets, function(bullet) {
             this.ctx.fillStyle = '#FFA500';
-            this.ctx.fillRect(bullet.x, bullet.y, bullet.width, bullet.height);
+            this.ctx.fillRect(bullet.x, bullet.y, 3, 12);
         }.bind(this));
     }
 

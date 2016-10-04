@@ -25,21 +25,19 @@ canvas{
     padding: 10px;
     box-sizing: border-box;
 }
-
 .score {
     float: right;
     position: absolute;
     right: 10px;
 }
-.score h3 {
-    margin: 0;
-    color: #fff;
-    font-size: initial;
-}
-.score h3 span {
-    font-size: 22px;
-}
-
+    .score h3 {
+        margin: 0;
+        color: #fff;
+        font-size: initial;
+    }
+        .score h3 span {
+            font-size: 22px;
+        }
 .text-box{
     color:#fff;
     text-align: center;
@@ -48,15 +46,12 @@ canvas{
     height: 100%;
     vertical-align: middle;
 }
-
 #gameOver{
     display: none;
 }
-
-#gameOver h2{
-    margin-bottom: 0;
-}
-
-#gameOver h5{
-    margin-bottom: 30px;
-}
+    #gameOver h2{
+        margin-bottom: 0;
+    }
+    #gameOver h5{
+        margin-bottom: 30px;
+    }
