@@ -39,6 +39,10 @@
         window.addEventListener('keydown', function(e){
             this.handleKeyDown(e);
         }.bind(this));
+
+        window.addEventListener('keyup', function(e){
+            this.handleKeyUp(e);
+        }.bind(this));
     }
 
     Game.prototype.handleStartGame = function(e) {
@@ -51,13 +55,25 @@
         if(this.endOfGame) return false;
         switch (e.keyCode) {
             case 37:
-                this.ship.moveToLeft();
+                this.ship.setMovingLeft(true);
                 break;
             case 39:
-                this.ship.moveToRight();
+                this.ship.setMovingRight(true);
                 break;
             case 38:
                 this.shoot();
+                break;
+        }
+    }
+
+    Game.prototype.handleKeyUp = function(e){
+        if(this.endOfGame) return false;
+        switch (e.keyCode) {
+            case 37:
+                this.ship.setMovingLeft(false);
+                break;
+            case 39:
+                this.ship.setMovingRight(false);
                 break;
         }
     }
@@ -166,11 +182,16 @@
 
     Game.prototype.isMeteoritAndShipCollision = function(meteorit, shipPosition) {
         var meteoritSize = 5 + meteorit.size * 12;
-        return meteorit.y > 540 && meteorit.y < 585 && meteorit.x > (shipPosition - meteoritSize + 1) && meteorit.x < (shipPosition + 44);
+        return (meteorit.y + 5 + meteorit.size * 12 - 7) > 540 &&
+                meteorit.y < 585 &&
+                meteorit.x > (shipPosition - meteoritSize + 5) &&
+                meteorit.x < (shipPosition + 40);
     }
 
     Game.prototype.stopPlaying = function() {
         this.endOfGame = true;
+        this.ship.setMovingLeft(false);
+        this.ship.setMovingRight(false);
         this.ctx.clearRect(0, 0, 600, 600);
         this.displayResult();
     }
