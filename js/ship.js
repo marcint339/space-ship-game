@@ -10,19 +10,6 @@
 
         this.movingLeft = false;
         this.movingRight = false;
-
-        this.initMovingInterval();
-    }
-
-    Ship.prototype.initMovingInterval = function() {
-        setInterval(function() {
-            if (this.movingLeft && this.position > -18) {
-                this.position -= 4;
-            }
-            if (this.movingRight && this.position < 575) {
-                this.position += 4;
-            }
-        }.bind(this), 9);
     }
 
     Ship.prototype.clear = function() {
@@ -35,6 +22,15 @@
 
     Ship.prototype.setMovingRight = function(value) {
         this.movingRight = value;
+    }
+
+    Ship.prototype.handleShipMove = function() {
+        if (this.movingLeft && this.position > -18) {
+           this.position -= 6;
+        }
+        if (this.movingRight && this.position < 575) {
+           this.position += 6;
+        }
     }
 
     Ship.prototype.getShipPosition = function() {

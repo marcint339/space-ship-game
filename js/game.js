@@ -109,6 +109,7 @@
             } else {
                 counter++;
             }
+            this.ship.handleShipMove();
             this.renderGameElements();
             this.checkIfGameOver();
 
